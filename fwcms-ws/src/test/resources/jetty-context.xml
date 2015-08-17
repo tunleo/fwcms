@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:sws="http://www.springframework.org/schema/web-services"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+						http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+						http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+						http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<!-- Manually start server after setting parent context. (init-method="start") -->
+	<bean id="jettyServer" class="org.eclipse.jetty.server.Server"
+		init-method="start" destroy-method="stop">
+		<property name="threadPool">
+			<bean id="ThreadPool" class="org.eclipse.jetty.util.thread.ExecutorThreadPool">
+				<constructor-arg value="0" />
+				<!--property name="corePoolSize" value="${server.thread.pool.core.pool.size}"/> 
+					<property name="maximumPoolSize" value="${server.thread.pool.max.pool.size}"/ -->
+			</bean>
+		</property>
+		<property name="connectors">
+			<list>
+				<bean id="Connector" class="org.eclipse.jetty.server.nio.SelectChannelConnector"
+					p:port="${server.port}" p:maxIdleTime="${server.max.idle.time}"
+					p:acceptors="${server.acceptor.num}" p:confidentialPort="${server.ssl.port}" />
+			</list>
+		</property>
+
+		<property name="handler">
+			<bean class="org.eclipse.jetty.server.handler.HandlerCollection">
+				<property name="handlers">
+					<list>
+						<bean class="org.eclipse.jetty.servlet.ServletContextHandler">
+							<property name="contextPath" value="/${server.context.path}"/>
+							<property name="sessionHandler">
+								<bean class="org.eclipse.jetty.server.session.SessionHandler" />
+							</property>
+							<property name="resourceBase" value="." />
+							<property name="servletHandler">
+								<bean class="org.eclipse.jetty.servlet.ServletHandler">
+									<property name="servlets"> <!-- servlet definition -->
+										<list>
+											<!-- default servlet -->
+											<bean class="org.eclipse.jetty.servlet.ServletHolder">
+												<property name="name" value="DefaultServlet" />
+												<property name="servlet">
+													<bean class="org.springframework.ws.transport.http.MessageDispatcherServlet" />
+												</property>
+												<property name="initParameters">
+													<map>
+														<entry key="contextConfigLocation"
+															value="classpath:application-ws-context-test.xml classpath:application-ws-context-client-test.xml" />
+														<entry key="transformWsdlLocations"
+															value="true"/>
+													</map>
+												</property>
+											</bean>
+										</list>
+									</property>
+									<property name="servletMappings">
+										<list><!-- servlet mapping -->
+											<bean class="org.eclipse.jetty.servlet.ServletMapping">
+												<property name="pathSpecs">
+													<list>
+														<value>/*.wsdl</value>
+														<value>/endpoints/*</value>
+													</list>
+												</property>
+												<property name="servletName" value="DefaultServlet" />
+											</bean>
+										</list>
+									</property>
+								</bean>
+							</property>
+						</bean>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:sws="http://www.springframework.org/schema/web-services"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+						http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+						http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+						http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	
+	<sws:annotation-driven />
+		
+	<context:component-scan base-package="com.nexbis.fwcms.ws" />
+	
+	<sws:interceptors>
+		<ref bean="loggingInterceptor"/>
+		<ref bean="wsSecurityInterceptor"/>
+		<ref bean="schemavalidatinginterceptor"/>
+	</sws:interceptors>
+
+	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+	
+	<!-- WSDL -->
+	<sws:static-wsdl id="authenticateUser" location="classpath:wsdl/authenticateUser.wsdl"/>
+	<sws:static-wsdl id="submitRequest" location="classpath:wsdl/submitRequest.wsdl"/>
+	<sws:static-wsdl id="getResult" location="classpath:wsdl/getResult.wsdl"/>
+    
+    <!-- WS Logging -->
+    <bean id="loggingInterceptor" class="org.springframework.ws.soap.server.endpoint.interceptor.SoapEnvelopeLoggingInterceptor"/>
+
+	<!-- Handle authentication -->
+	<bean id="userDetailsService" class="com.nexbis.fwcms.service.user.impl.UserServiceImpl" />
+
+	<bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+		<property name="validationActions" value="UsernameToken" />
+		<property name="validationCallbackHandler" ref="callbackHandler" />
+	</bean>
+	
+	 <bean id ="callbackHandler" class="org.springframework.ws.soap.security.wss4j.callback.SpringSecurityPasswordValidationCallbackHandler">
+        <property name="userDetailsService" ref="userDetailsService"/>
+    </bean>
+
+	<!-- Validation input -->
+	<bean class="org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver"/>
+
+	<!-- Transform validation message to return to client -->
+	<bean id="messageReceiverHandlerAdapter" class="com.nexbis.fwcms.ws.endpoint.adapter.FwcmsWsMessageReceiverHandlerAdapter"/>
+
+    <bean id="schemavalidatinginterceptor" class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
+	    <property name="schema" value="classpath:xsd/fwcms-schema.xsd"/>
+	    <property name="validateRequest" value="true"/>
+	    <property name="validateResponse" value="true"/>
+	</bean>
+	
+	 <bean id="exceptionResolver" class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
+        <property name="order" value="1"/>
+        <property name="defaultFault" value="SERVER"/>
+        <property name="exceptionMappings">
+            <value>
+                org.springframework.oxm.ValidationFailureException=CLIENT,Invalid request
+            </value>
+        </property>
+    </bean>
+</beans>

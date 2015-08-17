@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:ws="http://ws.fwcms.s5.com.my/"
+	targetNamespace="http://ws.fwcms.s5.com.my/"
+	elementFormDefault="qualified">
+	
+	<xs:element name="getResultRequest">
+        <xs:complexType>
+			<xs:attribute name="data" type="xs:string" use="required"/>
+		</xs:complexType>
+    </xs:element>
+	<xs:element name="getResultResponse">
+        <xs:complexType>
+			<xs:attribute name="afisResult" type="xs:string" use="required"/>
+		</xs:complexType>
+    </xs:element>
+</xs:schema>

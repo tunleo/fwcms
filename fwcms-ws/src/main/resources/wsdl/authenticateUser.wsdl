@@ -1,0 +1,50 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:sch="http://ws.fwcms.s5.com.my/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://ws.fwcms.s5.com.my/" targetNamespace="http://ws.fwcms.s5.com.my/">
+	<wsdl:types>
+		<xs:schema xmlns:ws="http://ws.fwcms.s5.com.my/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			attributeFormDefault="unqualified" elementFormDefault="qualified"
+			targetNamespace="http://ws.fwcms.s5.com.my/">
+			<xs:element name="authenticateUserRequest">
+				<xs:complexType>
+					<xs:sequence />
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="authenticateUserResponse">
+				<xs:complexType>
+					<xs:attribute name="token" type="xs:string" use="required" />
+				</xs:complexType>
+			</xs:element>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="authenticateUserRequest">
+		<wsdl:part element="tns:authenticateUserRequest" name="authenticateUserRequest"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="authenticateUserResponse">
+		<wsdl:part element="tns:authenticateUserResponse" name="authenticateUserResponse"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="authenticateUser">
+		<wsdl:operation name="authenticateUser">
+			<wsdl:input message="tns:authenticateUserRequest" name="authenticateUserRequest"></wsdl:input>
+			<wsdl:output message="tns:authenticateUserResponse" name="authenticateUserResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="authenticateUserSoap11" type="tns:authenticateUser">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="authenticateUser">
+			<soap:operation soapAction="" />
+			<wsdl:input name="authenticateUserRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="authenticateUserResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="authenticateUserService">
+		<wsdl:port binding="tns:authenticateUserSoap11" name="authenticateUserSoap11">
+			<soap:address location="/endpoints" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

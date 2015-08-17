@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://ws.fwcms.s5.com.my/">
+	<xs:include schemaLocation="authenticateUser.xsd"/>
+	<xs:include schemaLocation="submitRequest.xsd"/>
+	<xs:include schemaLocation="getResult.xsd"/>
+</xs:schema>

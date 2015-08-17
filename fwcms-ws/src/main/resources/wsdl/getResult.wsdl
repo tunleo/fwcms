@@ -1,0 +1,50 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:sch="http://ws.fwcms.s5.com.my/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://ws.fwcms.s5.com.my/" targetNamespace="http://ws.fwcms.s5.com.my/">
+	<wsdl:types>
+		<xs:schema xmlns:ws="http://ws.fwcms.s5.com.my/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			attributeFormDefault="unqualified" elementFormDefault="qualified"
+			targetNamespace="http://ws.fwcms.s5.com.my/">
+			<xs:element name="getResultRequest">
+				<xs:complexType>
+					<xs:attribute name="data" type="xs:string" use="required" />
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="getResultResponse">
+				<xs:complexType>
+					<xs:attribute name="afisResult" type="xs:string" use="required" />
+				</xs:complexType>
+			</xs:element>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="getResultResponse">
+		<wsdl:part element="tns:getResultResponse" name="getResultResponse"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getResultRequest">
+		<wsdl:part element="tns:getResultRequest" name="getResultRequest"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="getResult">
+		<wsdl:operation name="getResult">
+			<wsdl:input message="tns:getResultRequest" name="getResultRequest"></wsdl:input>
+			<wsdl:output message="tns:getResultResponse" name="getResultResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="getResultSoap11" type="tns:getResult">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="getResult">
+			<soap:operation soapAction="" />
+			<wsdl:input name="getResultRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getResultResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="getResultService">
+		<wsdl:port binding="tns:getResultSoap11" name="getResultSoap11">
+			<soap:address location="/endpoints" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

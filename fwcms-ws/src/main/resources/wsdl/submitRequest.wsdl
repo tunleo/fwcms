@@ -1,0 +1,50 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:sch="http://ws.fwcms.s5.com.my/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://ws.fwcms.s5.com.my/" targetNamespace="http://ws.fwcms.s5.com.my/">
+	<wsdl:types>
+		<xs:schema xmlns:ws="http://ws.fwcms.s5.com.my/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			attributeFormDefault="unqualified" elementFormDefault="qualified"
+			targetNamespace="http://ws.fwcms.s5.com.my/">
+			<xs:element name="submitRequestRequest">
+				<xs:complexType>
+					<xs:attribute name="data" type="xs:string" use="required" />
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="submitRequestResponse">
+				<xs:complexType>
+					<xs:attribute name="afisResult" type="xs:string" use="required" />
+				</xs:complexType>
+			</xs:element>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="submitRequestRequest">
+		<wsdl:part element="tns:submitRequestRequest" name="submitRequestRequest"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="submitRequestResponse">
+		<wsdl:part element="tns:submitRequestResponse" name="submitRequestResponse"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="submitRequest">
+		<wsdl:operation name="submitRequest">
+			<wsdl:input message="tns:submitRequestRequest" name="submitRequestRequest"></wsdl:input>
+			<wsdl:output message="tns:submitRequestResponse" name="submitRequestResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="submitRequestSoap11" type="tns:submitRequest">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="submitRequest">
+			<soap:operation soapAction="" />
+			<wsdl:input name="submitRequestRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="submitRequestResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="submitRequestService">
+		<wsdl:port binding="tns:submitRequestSoap11" name="submitRequestSoap11">
+			<soap:address location="/endpoints" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
